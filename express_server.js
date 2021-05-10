@@ -18,6 +18,11 @@ app.get('/urls',(req, res) => {
   const templateVar = { urls: urlDatabase, hello: 'hello world'};
   res.render('urls_index', templateVar);
 });
+app.get("/urls/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL;
+  const templateVars = { shortURL, longURL: urlDatabase[shortURL]};
+  res.render("urls_show", templateVars);
+});
 
 app.get('/Hello',(req,res) => {
   res.send('<html><body>Hello <b>World</b></body></html>\n');

@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/DylanMcGrann-dev/tinyapp/issues"
   },
-  "homepage": "https://github.com/DylanMcGrann-dev/tinyapp#readme"
+  "homepage": "https://github.com/DylanMcGrann-dev/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }

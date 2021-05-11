@@ -15,8 +15,11 @@ app.get('/urls.json',(req, res) => {
   res.json(urlDatabase);
 });
 app.get('/urls',(req, res) => {
-  const templateVar = { urls: urlDatabase, hello: 'hello world'};
+  const templateVar = { urls: urlDatabase};
   res.render('urls_index', templateVar);
+});
+app.get('/urls/new',(req,res) => {
+  res.render('urls_new');
 });
 app.get("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;

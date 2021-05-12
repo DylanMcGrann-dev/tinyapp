@@ -16,11 +16,18 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-// const templateVars = {
-//   username: req.cookies["username"],
-//   // ... any other vars
-// };
-// res.render("urls_index", templateVars);
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
 
 //A function that creates a random six digit alpha Numerical string
 const generateRandomString = function(){
@@ -63,12 +70,23 @@ app.get("/urls/new",(req,res) => {
   res.render("urls_new",templateVar);
 });
 
-app.get('/register', (req,res) => {
+//this is the registration page where users will submit their email and password
+app.get("/register", (req,res) => {
   const templateVar = {
     username: req.cookies["username"],
     // ... any other vars
   };
   res.render("register",templateVar);
+});
+
+app.post("/register", (req,res) => {
+  const userID = generateRandomString();
+  const email = req.body.email;
+  const password = req.body.password;
+  users[userID] = {userID: userID, email: email, password: password};
+  res.cookie("user_ID",userID);
+  console.log("user",users);
+  res.redirect(`/urls`);
 });
 
 //updates an edited longURL for the sortURL

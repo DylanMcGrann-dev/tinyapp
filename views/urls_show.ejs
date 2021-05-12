@@ -4,6 +4,39 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>URL - TinyApp Example</title>
+  <style>
+    .EditText {
+      color:rgb(118, 117, 117)
+    }
+    .submitButton {
+      background-color: rgb(27, 145, 249);
+    border: none;
+    color: rgb(252, 249, 249);
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    position: relative;
+    left: 10px;
+    top: -10px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 7px
+    }
+    .label {
+      color: rgb(118, 117, 117);
+    position: relative;
+    left: -215px;
+    top: 41px;
+    }
+    .submission {
+      position: relative;
+      left: 25px;
+      top: -10px;
+    }
+    ::placeholder {
+      color: black;
+    }
+  </style>
 </head>
 
 <body>
@@ -13,9 +46,17 @@
       <div class="card-body">
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
         <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
-        <p class="card-text"><a href="#">New URL</a></p>
       </div>
-    <div class="card-footer text-muted"></div>
+  <div class="card-footer text-muted"></div>
+      <div class="card-header">
+        <h2 class="EditText">Edit</h2>
+        <label class="label">New URL:</label>
+        <form method="POST" action="/urls/<%=shortURL%>">
+          <input class="submission" type="text" name="longURL" placeholder="<%=longURL%>" style="width: 300px; margin: 1em"></input>
+          <button type="submit"  class="submitButton">Submit</button></form>
+      </div>
+      
+    
   </div>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

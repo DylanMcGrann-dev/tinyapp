@@ -7,13 +7,23 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <style>
-  .btn {
+  .DeleteBtn {
     border: 3px solid rgb(215, 4, 4);
     background-color: white;
     color: rgb(248, 1, 1);
     padding: 10px 25px;
     font-size: 16px;
     cursor: pointer;
+    border-radius: 7px;
+  }
+  .EditBtn {
+    border: 3px solid rgb(4, 99, 215);
+    background-color: white;
+    color: rgb(4, 99, 215);
+    padding: 10px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 7px;
   }
   </style>
   <title>TinyApp</title>
@@ -27,6 +37,7 @@
         <tr>
           <th scope="col">Short URL</th>
           <th scope="col">Long URL</th>
+          <th scope="col">Edit</th>
           <th scope="col">Delete</th>
           
         </tr>
@@ -37,8 +48,8 @@
           <tr>
             <td><%= url %></td>
             <td><%= urls[url] %></td>
-            <td><form method="POST" action="/urls/<%=url%>/delete"><button class="btn">Delete</button></form></td>
-            
+            <td><form method="POST" action="/urls/<%=url%>"><button class="EditBtn">Edit</button></form></td>
+            <td><form method="POST" action="/urls/<%=url%>/delete"><button class="DeleteBtn">Delete</button></form></td>
           </tr>
           <% } %>
           

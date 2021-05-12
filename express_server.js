@@ -16,6 +16,12 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// const templateVars = {
+//   username: req.cookies["username"],
+//   // ... any other vars
+// };
+// res.render("urls_index", templateVars);
+
 //A function that creates a random six digit alpha Numerical string
 const generateRandomString = function(){
   let letterArr = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
@@ -36,7 +42,7 @@ app.get("/urls.json",(req, res) => {
 });
 
 app.get("/urls",(req, res) => {
-  const templateVar = { urls: urlDatabase};
+  const templateVar = {  username: req.cookies["username"],urls: urlDatabase};
   res.render("urls_index", templateVar);
 });
 
@@ -50,7 +56,11 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/new",(req,res) => {
-  res.render("urls_new");
+  const templateVar = {
+    username: req.cookies["username"],
+    // ... any other vars
+  };
+  res.render("urls_new",templateVar);
 });
 
 //updates an edited longURL for the sortURL
@@ -68,6 +78,12 @@ app.post("/login", (req,res) => {
   const username = req.body.username;
   res.cookie("username",username);
   res.redirect(`/urls`);
+});
+
+app.post("/logout", (req,res) => {
+  const username = req.body.username;
+  res.clearCookie("username",username);
+  res.redirect("/urls");
 });
 
 //Deletes a long shortURL pair from the list of urls
@@ -88,8 +104,8 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  const templateVars = { shortURL, longURL: urlDatabase[shortURL]};
-  res.render("urls_show", templateVars);
+  const templateVar = {  username: req.cookies["username"], shortURL, longURL: urlDatabase[shortURL]};
+  res.render("urls_show", templateVar);
 });
 
 app.get("/Hello",(req,res) => {

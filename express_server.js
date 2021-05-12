@@ -63,6 +63,14 @@ app.get("/urls/new",(req,res) => {
   res.render("urls_new",templateVar);
 });
 
+app.get('/register', (req,res) => {
+  const templateVar = {
+    username: req.cookies["username"],
+    // ... any other vars
+  };
+  res.render("register",templateVar);
+});
+
 //updates an edited longURL for the sortURL
 app.post("/urls/:shortURL", (req,res) => {
 console.log(req.params.shortURL);

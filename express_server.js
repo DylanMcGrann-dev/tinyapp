@@ -1,10 +1,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const PORT = 8080; // default port 8080
 app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
+
+
+
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -54,10 +60,15 @@ console.log(req.body);
   const longURL = req.body.longURL
   const shortURL = req.params.shortURL;
   urlDatabase[shortURL] = longURL;
-  res.redirect(`/urls/${shortURL}`)
+  res.redirect(`/urls/${shortURL}`);
 });
 
-
+//sets a value (the username the user submitted) to a cookie named username 
+app.post("/login", (req,res) => {
+  const username = req.body.username;
+  res.cookie("username",username);
+  res.redirect(`/urls`);
+});
 
 //Deletes a long shortURL pair from the list of urls
 app.post("/urls/:shortURL/delete",(req,res) => {

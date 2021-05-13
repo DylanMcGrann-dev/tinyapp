@@ -7,14 +7,13 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <style>
-    .submitEmail {
+    .loginPage {
       background-color: rgb(27, 145, 249);
       border: none;
       color: rgb(252, 249, 249);
       padding: 10px 20px;
       text-align: center;
-      text-decoration: none;
-      position: relative;
+      position: center;
       margin: 4px 2px;
       cursor: pointer;
       border-radius: 7px;
@@ -27,18 +26,18 @@
       margin-left: 20px;
     }
   </style>
-  <title>Registration</title>
+  <title>login</title>
 </head>
 <body>
   <%- include("partials/_header") %>
   <main>
-    <h3 class="marginInput">Create Account</h3>
-      <form action="/register" method="POST">
-      <h5 class="marginText">Email Address</h5>
-        <h5 class="marginInput"><input type="email" name="email" placeholder="Enter email"></h5>
-        <h5 class="marginText">Password</h5>
-        <h5 class="marginInput"><input type="password" name="password" placeholder="Password"></h5>
-      <button class="submitEmail">Register</button></form>
+    <h3 class="marginInput">Login</h3>
+      <form action="/login" method="POST">
+      <h5 class="marginText">Email</h5>
+      <h5 class="marginInput"><input type="email" name="email" placeholder="Enter email"></h5>
+      <h5 class="marginText">Password</h5>
+      <h5 class="marginInput"><input type="password" name="password" placeholder="Passsword"></h5>
+      <h5><button class="loginPage">login</button></h5></form>
   
     <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

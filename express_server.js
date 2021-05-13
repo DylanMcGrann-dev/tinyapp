@@ -11,7 +11,7 @@ app.use(cookieParser());
 
 
 
-//A variable tha cotains all submited urls to be Shortened paired with their shortend links
+//A variable that cotains object with all submited urls paired with their shortend links and userID
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -31,25 +31,17 @@ const users = {
   }
 };
 
-//loops through the users object and compares emails 
+//loops through the users object and compares emails if there is a match the function returns the the object the email is in
 const loopEmail = function(object, value) {
   for (const key in object) {         
     if (object[key]["email"] === value) {
-      return true;
+      return object[key];
     };
   }
-  return false;
+  return null;
 };
 
-//loops through the users object and compares passwords
-const looppasswords = function(object, value) {
-  for (const key in object) {         
-    if (object[key]["password"] === value) {
-      return true;
-    };
-  }
-  return false;
-};
+
 
 //A function that creates a random six digit alpha Numerical string
 const generateRandomString = function(){
@@ -78,19 +70,28 @@ app.get("/urls",(req, res) => {
 //creates new short url for url Submitted 
 //then redirects user to /urls/:shortURL so they can see the new shortURL for their Entered url
 app.post("/urls", (req, res) => {
+  const cookies = req.cookies;
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
+  urlDatabase[shortURL] = {longURL:longURL, userID: cookies.user_ID};
+  console.log("urlDatabase",urlDatabase);
+  console.log("urlDatabase.shortURL.longURL",urlDatabase[shortURL].longURL)
   res.redirect(`/urls/${shortURL}`);         
 });
 
 //renders the new url tobe shortened page
+//checks to see if user is logged in if not they are redirected to the log in page
 app.get("/urls/new",(req,res) => {
-  const templateVar = {
+  if (req.cookies.user_ID) {
+    const templateVar = {
     user_ID: users[req.cookies["user_ID"]],
     // ... any other vars
-  };
-  res.render("urls_new",templateVar);
+    };
+    res.render("urls_new",templateVar);
+    return;
+  }
+  
+  res.redirect("/register");
 });
 
 //this is the registration page where users will submit their email and password
@@ -130,13 +131,13 @@ app.post("/urls/:shortURL", (req,res) => {
 //checks users object for any email matches if match found then checks to see if password is === 
 //if password is a match then user is logged in if at either point no match is found 403 
 app.post("/login", (req,res) => {
-  const userID = generateRandomString();
   const email = req.body.email;
+  const loop = loopEmail(users,email);
   const password = req.body.password;
-  if (loopEmail(users,email)) {
-    if (looppasswords(users,password)) {
-      users[userID] = {userID: userID, email: email, password: password};
-      res.cookie("user_ID",userID);
+  if (loop) {
+    if (password === loop.password) {
+      // users[userID] = {userID: userID, email: email, password: password};
+      res.cookie("user_ID",loop.userID);
       res.redirect(`/urls`);
     } else {
       res.redirect(`/error/403 Incorrect passord`);  
@@ -172,14 +173,15 @@ app.post("/urls/:shortURL/delete",(req,res) => {
 //Users can click on this six digit link to be Redirected to their Previously Submitted url
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
+  const longURL = urlDatabase[shortURL].longURL;
   const templateVar = {shortURL: longURL}
   res.redirect(`${longURL}`);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  const templateVar = { user_ID: users[req.cookies["user_ID"]],  shortURL, longURL: urlDatabase[shortURL]};
+  // console.log("urlDatabase.shortURL",urlDatabase.shortURL);
+  const templateVar = { user_ID: users[req.cookies["user_ID"]],  shortURL, longURL: urlDatabase[shortURL].longURL};
   res.render("urls_show", templateVar);
 });
 

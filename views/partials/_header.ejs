@@ -1,8 +1,8 @@
 <style>
-  .submit {
-    background-color: rgb(27, 145, 249);
-    border-color: blue;
-    color: rgb(8, 8, 8);
+  .login {
+    background: transparent;
+    border: none;
+    color: rgba(223, 223, 223, 0.733);
     padding: 5px 15px;
     text-align: center;
     text-decoration: none;
@@ -10,10 +10,43 @@
     top: -10px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 7px
+    
+  }
+  .register {
+    background: transparent;
+    border: none;
+    color: rgba(223, 223, 223, 0.733);
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    position: right;
+    top: -10px;
+    margin: 4px 2px;
+    cursor: pointer;
   }
   .input {
     left: 100px;
+  }
+  .login:hover {
+    color: rgba(255, 255, 255, 0.89);
+  }
+  .logout {
+    border: 2px solid rgb(74, 73, 73);
+    background-color: transparent;
+    color: rgb(72, 72, 72);
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .register:hover {
+    color: rgba(255, 255, 255, 0.89);
+  }
+  .Email {
+    margin-right: 20px;
+  }
+  .logout:hover {
+    color: rgba(255, 255, 255, 0.89);
   }
 </style>
 <header>
@@ -28,15 +61,16 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-    <% if (username) {%>
+    <% if (user_ID) {%>
 
-      <h4>Logged in as: <%=username%></h4>
+      <h3 class="Email">Logged in as: <%=user_ID.email %></h3>
       <a><form method="POST" action="/logout" name="username">
-        <button type="submit"  class="submit">logout</button></form></a>
+        <button type="submit"  class="logout">Logout</button></form></a>
       <% } else { %>
-        <a><form method="POST" action="/login" name="username">
-        <input class="input" type="text" name="username" placeholder="username" style="width: 300px; margin: 1em"></input>
-        <button type="submit"  class="submit">Submit</button></form></a>
+        <a><form method="GET" action="/login" name="username">
+        <button type="submit"  class="login">Login</button></form></a>
+        <a><form method="GET" action="/register" name="username">
+          <button type="submit"  class="register">Register</button></form></a>
           <% } %>
   </nav>
 </header>

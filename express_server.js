@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const { response } = require("express");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -41,6 +42,7 @@ const loopEmail = function(object, value) {
   return null;
 };
 
+//Function loops through urlDatabase to find all urls linked to logged in user using the stored userID
 const urlsForUser = function(userid) {
   let usersURLS = {}
   for (const id in urlDatabase) {
@@ -116,12 +118,13 @@ app.post("/register", (req,res) => {
   const userID = generateRandomString();
   const email = req.body.email;
   const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
   if (email === '' || password === '') {
     res.redirect('/error/400 email or password is empty');
   } else if (loopEmail(users,email)) {
     res.redirect('/error/400 email already exists');
   }
-  users[userID] = {userID: userID, email: email, password: password};
+  users[userID] = {userID: userID, email: email, password: hashedPassword};
   res.cookie("user_ID",userID);
   res.redirect(`/urls`);
 });
@@ -141,7 +144,7 @@ app.post("/login", (req,res) => {
   const loop = loopEmail(users,email);
   const password = req.body.password;
   if (loop) {
-    if (password === loop.password) {
+    if (bcrypt.compareSync(password,loop.password)) {
       // users[userID] = {userID: userID, email: email, password: password};
       res.cookie("user_ID",loop.userID);
       res.redirect(`/urls`);

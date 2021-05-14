@@ -15,6 +15,7 @@
     font-size: 16px;
     cursor: pointer;
     border-radius: 7px;
+    margin-left: -22px;
   }
   .EditBtn {
     border: 3px solid rgb(4, 99, 215);
@@ -24,6 +25,8 @@
     font-size: 16px;
     cursor: pointer;
     border-radius: 7px;
+    margin-left: -24px;
+    position: fixed; 
   }
   </style>
   <title>TinyApp</title>
@@ -31,6 +34,7 @@
 <body>
   <%- include("partials/_header") %>
   <main style="margin: 1em;">
+    <% if (user_ID) {%>
     <h3>My URLs</h3>
     <table class="table">
       <thead>
@@ -42,16 +46,17 @@
         </tr>
       </thead>
       <tbody>
-        
-        <% for(let url in urls) { %>
-          <tr>
-            <td><%= url %></td>
-            <td><%= urls[url] %></td>
-            <td><form method="POST" action="/urls/<%=url%>"><button class="EditBtn">Edit</button></form></td>
-            <td><form method="POST" action="/urls/<%=url%>/delete"><button class="DeleteBtn">Delete</button></form></td>
-          </tr>
+          <% for(let url in urls) { %>
+            <tr>
+              <td><%= url %></td>
+              <td><%= urls[url].longURL %></td>
+              <td><a href="/urls/<%=url%>" class="EditBtn">Edit</a></td>
+              <td><form method="POST" action="/urls/<%=url%>/delete"><button class="DeleteBtn">Delete</button></form></td>
+            </tr>
           <% } %>
-          
+        <% } else { %>
+          <h3>Login or register</h3>  
+        <% } %>  
       </tbody>
     </table>
   </main>

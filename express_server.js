@@ -59,7 +59,7 @@ const generateRandomString = function(){
 };
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  res.redirect(`/urls`);
 });
 
 app.get("/urls.json",(req, res) => {
@@ -74,10 +74,15 @@ app.get("/urls",(req, res) => {
 //creates new short url for url Submitted 
 //then redirects user to /urls/:shortURL so they can see the new shortURL for their Entered url
 app.post("/urls", (req, res) => {
-  const shortURL = generateRandomString();
-  const longURL = req.body.longURL;
-  urlDatabase[shortURL] = {longURL:longURL, userID: req.session.user_ID};
-  res.redirect(`/urls/${shortURL}`);         
+  console.log('req.session',req.session);
+  if (req.session.user_ID) {
+    const shortURL = generateRandomString();
+    const longURL = req.body.longURL;
+    urlDatabase[shortURL] = {longURL:longURL, userID: req.session.user_ID};
+    res.redirect(`/urls/${shortURL}`);         
+  } else {
+    res.send("hey man you shouldn't be here");
+  }
 });
 
 //renders the new url tobe shortened page
@@ -110,9 +115,9 @@ app.post("/register", (req,res) => {
   const password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10);
   if (email === '' || password === '') {
-    res.redirect('/error/400 email or password is empty');
+    res.send('Error 400 email or password is empty');
   } else if (loopEmail(users,email)) {
-    res.redirect('/error/400 email already exists');
+    res.send('Error 400 email already exists');
   }
   req.session.user_ID = userID;
   users[userID] = {userID: userID, email: email, password: hashedPassword};
@@ -121,10 +126,14 @@ app.post("/register", (req,res) => {
 
 //updates an edited longURL for the sortURL
 app.post("/urls/:shortURL", (req,res) => {
-  const longURL = req.body.longURL;
-  const shortURL = req.params.shortURL;
-  urlDatabase[shortURL].longURL = longURL;
-  res.redirect(`/urls/${shortURL}`);
+  if (req.session.user_ID) {
+    const longURL = req.body.longURL;
+    const shortURL = req.params.shortURL;
+    urlDatabase[shortURL].longURL = longURL;
+    res.redirect(`/urls/${shortURL}`);
+  } else {
+    res.redirect("/register");
+  }
 });
 
 //checks users object for any email matches if a match is found then checks to see if password is === stored password
@@ -138,10 +147,10 @@ app.post("/login", (req,res) => {
       req.session.user_ID = users[user].userID;
       res.redirect(`/urls`);
     } else {
-      res.redirect(`/error/403 Incorrect passord`);  
+      res.send(`Error 403 Incorrect passord`);  
     }
   } else {
-    res.redirect(`/error/403 email does not exist`);
+    res.send(`Error 403 email does not exist`);
   }
 }); 
 
@@ -160,26 +169,38 @@ app.post("/logout", (req,res) => {
 
 //Deletes a long shortURL pair from the list of urls
 app.post("/urls/:shortURL/delete",(req,res) => {
-  const shortURL = req.params.shortURL;
-  const loggedINUser = urlsForUser(req.session.user_ID)
-  delete urlDatabase[shortURL];
-  res.redirect("/urls");
+  if (req.session.user_ID) {
+    const shortURL = req.params.shortURL;
+    delete urlDatabase[shortURL];
+    res.redirect("/urls");
+  } else {
+    res.send("hey dude you should not be here!");
+  }
+
 });
 
 //this pages shows the newly created six digit shortURL for the Submitted url
 //Users can click on this six digit link to be Redirected to their Previously Submitted url
 app.get("/u/:shortURL", (req, res) => {
+  if (req.session.user_ID) {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL].longURL;
-  const templateVar = {shortURL: longURL};
   res.redirect(`${longURL}`);
+  } else {
+    res.redirect(`/login`);
+  }
+
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  if (req.session.user_ID) {
   const loggedINUser = urlsForUser(req.session.user_ID);
   const shortURL = req.params.shortURL;
   const templateVar = { user_ID: users[req.session["user_ID"]],  shortURL, longURL: urlDatabase[shortURL].longURL};
   res.render("urls_show", templateVar);
+  } else {
+    res.redirect(`/login`);
+  }
 });
 
 app.get("/Hello",(req,res) => {
